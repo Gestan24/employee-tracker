@@ -1,7 +1,6 @@
 {
   "name": "challenge-12",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,6 +9,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^16.0.1",
+    "inquirer": "^8.2.4",
+    "jest": "^28.1.3",
     "mysql2": "^2.3.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gestan24/employee-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Gestan24/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/Gestan24/employee-tracker#readme",
+  "description": ""
 }
