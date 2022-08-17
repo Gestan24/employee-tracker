@@ -8,6 +8,10 @@ const mysql = require('mysql2');
 
 const cTable = require('console.table');
 
+const employeeArr = [];
+const roleArr = [];
+const choiceArr = [];
+
 
 
 const connection = mysql.createConnection(
@@ -221,7 +225,7 @@ const addEmployee = () => {
 
                 choices: function () {
 
-                    var choiceArr = [];
+
 
                     for (i = 0; i < results.length; i++) {
 
@@ -284,11 +288,244 @@ const addEmployee = () => {
 
 const updateEmployee = () => {
 
-    const sql = ``
+    const sql = `SELECT employee.first_name FROM employee;`
+
+    connection.query(sql, (err, results) => {
+
+        if (err) throw err;
+
+        return inquirer.prompt([
+
+            {
+
+                type: 'list',
+
+                name: 'updateEmployee',
+
+                message: 'Which employee would you like to update?',
+
+                choices: function () {
+
+
+
+                    for (i = 0; i < results.length; i++) {
+
+                        employeeArr.push(results[i].first_name)
+
+                    }
+
+
+
+                    return employeeArr;
+
+                },
+
+            },
+
+
+        ]).then(function (answer) {
+
+            const savedName = answer.updateEmployee;
+
+            const sql2 = `SELECT employee.role_id FROM employee;`
+
+            connection.query(sql2, (err, answer) => {
+
+                if (err) throw err;
+
+                return inquirer.prompt([
+
+                    {
+
+                        type: 'list',
+
+                        name: 'roleSelect',
+
+                        message: 'Which role would you like to assign for this employee?',
+
+                        choices: function () {
+
+
+                            for (i = 0; i < answer.length; i++) {
+
+                                roleArr.push(answer[i].role_id)
+
+                            }
+
+                            return roleArr;
+
+
+
+
+                        }
+
+
+                    }
+
+
+                ]).then(answers => {
+
+                    const update = 'UPDATE employee SET role_id = ? WHERE first_name = ?;'
+
+                    const param = [answers.roleSelect, savedName];
+
+                    connection.execute(update, param, (err, results) => {
+
+                        const table = cTable.getTable(results);
+
+                        if (err) throw err;
+
+                        console.log(table);
+                        console.log('--------------------------'),
+                            console.log('Employee has been updated!'),
+                            console.log('--------------------------');
+
+                        promptTrack();
+                    });
+
+                });
+
+            });
+
+        });
+
+    });
+
 }
 
+const getRoles = () => {
+
+    const sql = 'SELECT roles.title FROM roles;'
+
+    connection.query(sql, (err, results) => {
+
+        const table = cTable.getTable(results);
+
+        if (err) {
+
+            return err
+
+        }
+
+        console.log(table);
+
+        promptTrack();
+    })
+
+}
+
+const addRole = () => {
+
+    return inquirer.prompt([
+
+        {
+
+            type: 'number',
+
+            name: 'idRole',
+
+            message: 'What is the id of the new role?',
+
+            validate: idRole => {
+
+                if (isNaN(idRole) === false) {
+
+                    return true;
+
+                }
+
+                return false;
+            }
+
+        },
+
+        {
+
+            type: 'input',
+
+            name: 'newRole',
+
+            message: 'What is the title of the role you would like to add?',
+
+            validate: newRole => {
+
+                if (newRole) {
+
+                    return true;
+
+                } else {
+
+                    console.log('Please enter a new role to add!');
+
+                    return false;
+
+                }
+
+            }
+
+        },
+
+        {
+
+            type: 'number',
+
+            name: 'salary',
+
+            message: 'What is the salary for the role?(must be within 6 figures, no commas)',
+
+            validate: salary => {
+
+                if (isNaN(salary) === false) {
+
+                    return true;
+
+                }
+
+                return false;
+            }
+
+        },
+
+        {
+
+            type: 'number',
+
+            name: 'departmentId',
+
+            message: "What is this role's department id?",
+
+            validate: departmentId => {
+
+                if (isNaN(departmentId) === false) {
+
+                    return true;
+
+                }
+
+                return false;
+            }
+
+        }
 
 
+    ]).then(answer => {
+
+        const sql = 'INSERT INTO roles (id, title, salary, department_id) VALUES (?,?,?,?)'
+
+        const params = [answer.idRole, answer.newRole, answer.salary, answer.departmentId];
 
 
+        connection.execute(sql, params, (err, results) => {
 
+            const table = cTable.getTable(results);
+
+            if (err) throw err;
+
+            console.log(table);
+
+            promptTrack();
+        })
+
+    });
+
+}

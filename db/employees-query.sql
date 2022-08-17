@@ -8,6 +8,17 @@ LEFT JOIN department ON roles.department_id = department.id
 LEFT JOIN employee manager ON employee.manager_id = manager.id;
 
 
+SELECT CONCAT(employee.first_name, ' ', employee.last_name) AS employee_name
+
+FROM employee
+
+LEFT JOIN employee full_name ON employee.last_name = employee.first_name;
+
+
+
+SELECT roles.title FROM roles;
+
+
 
 
 
