@@ -1,10 +1,10 @@
-INSERT INTO department (id, department_name)
+INSERT INTO department (department_name)
 
 VALUES
-(1,'Engineering'),
-(2, 'Finance'),
-(3, 'Legal'),
-(4, 'Sales');
+('Engineering'),
+('Finance'),
+('Legal'),
+('Sales');
 
 
 

@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS employee;
 
 CREATE TABLE department (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     department_name VARCHAR(30) NOT NULL
 );
 

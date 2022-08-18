@@ -529,3 +529,109 @@ const addRole = () => {
     });
 
 }
+
+const getDepartments = () => {
+
+    const sql = 'SELECT * FROM department;'
+
+    connection.query(sql, (err, results) => {
+
+        const table = cTable.getTable(results);
+
+        if (err) {
+
+            return err
+
+        }
+
+        console.log(table);
+
+        promptTrack();
+    });
+
+}
+
+const addDepartment = () => {
+
+    return inquirer.prompt([
+
+        {
+
+            type: 'input',
+
+            name: 'newDep',
+
+            message: 'What is the name of the department you wish to add?',
+
+            validate: newDep => {
+
+                if (newDep) {
+
+                    return true;
+
+                } else {
+
+                    console.log('Please enter a new department name!');
+
+                    return false;
+
+                }
+            }
+
+        }
+
+    ]).then(answer => {
+
+        const sql = 'INSERT INTO department (department_name) VALUES (?)'
+
+        const params = [answer.newDep];
+
+
+        connection.execute(sql, params, (err, results) => {
+
+            const table = cTable.getTable(results);
+
+            if (err) throw err;
+
+            console.log(table);
+
+            promptTrack();
+        })
+
+    });
+
+}
+
+const quit = () => {
+
+    return inquirer.prompt([
+
+        {
+
+            type: 'confirm',
+
+            name: 'confirmQuit',
+
+            message: 'Are you sure you want to quit?',
+
+            default: false
+
+        
+        }
+
+    ]).then(answer => {
+
+        if (answer.confirmQuit === true) {
+
+            console.log('Thanks for using Employee Tracker!!');
+            
+
+        } else {
+
+            promptTrack();
+        }
+
+    })
+    
+
+}
